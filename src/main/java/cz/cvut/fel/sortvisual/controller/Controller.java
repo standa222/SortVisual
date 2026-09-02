@@ -16,8 +16,9 @@ public class Controller {
         this.algorithms = algorithms;
     }
 
-    public void shuffle() {
+    public void onShuffle() {
         model.shuffle();
+        view.render(model.getData());
     }
 
     // called on init - show menu immediately
@@ -29,5 +30,15 @@ public class Controller {
     public void onSelectAlgorithm(SortingAlgorithm algo) {
         model.setSortingAlgo(algo);
         view.showVisualizer(algo.getInfo());
+        view.render(model.getData());
+    }
+
+    public void onStartSort() {
+        model.sort();
+        view.render(model.getData());
+    }
+
+    public void onBackToMenu() {
+        view.showMenu(algorithms);
     }
 }
