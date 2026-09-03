@@ -8,6 +8,7 @@ import lombok.Data;
 public class SortingAlgoInfo {
     private String name;
     private String avgTimeComplexity;
+    private boolean stable;
     private String worstTimeComplexity;
     private String worstTimeComplexityNote = null;
     private String bestTimeComplexity;

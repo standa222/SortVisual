@@ -22,8 +22,8 @@ public class Model {
         sortingAlgo.sort(data);
     }
 
-    public void setSortingAlgo(SortingAlgorithm sortingAlgo) {
+    public void setSortingAlgo(SortingAlgorithm sortingAlgo, int size) {
         this.sortingAlgo = sortingAlgo;
-        data = new TrackedList();
+        data = new TrackedList(size);
     }
 }

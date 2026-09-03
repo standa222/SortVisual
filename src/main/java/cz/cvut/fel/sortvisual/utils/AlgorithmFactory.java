@@ -12,6 +12,7 @@ public class AlgorithmFactory {
                 new BubbleSort(new SortingAlgoInfo(
                         "Bubble Sort",
                         "n^2",
+                        true,
                         "n^2",
                         "reverse sorted data",
                         "n",

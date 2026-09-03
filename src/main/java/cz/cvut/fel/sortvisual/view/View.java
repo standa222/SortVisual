@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,16 +38,42 @@ public class View {
         Label title = new Label("Select a Sorting Algorithm");
         title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
 
-        layout.getChildren().add(title);
+        Label sizeLabel = new Label("Size of the list:");
+        sizeLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+        TextField sizeTextField = new TextField("100");
+        HBox hb = new HBox(15);
+        hb.setAlignment(Pos.CENTER);
+        hb.getChildren().addAll(sizeLabel, sizeTextField);
+
+        Label errorLabel = new Label();
+        errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 14px;");
+
+        layout.getChildren().addAll(title, hb, errorLabel);
         for (SortingAlgorithm algo : algorithms) {
-            Button btn = new Button(algo.getInfo().getName());
-            btn.setPrefWidth(200);
-            btn.setStyle("-fx-font-size: 16px; -fx-padding: 8px;");
-            btn.setOnAction(e -> controller.onSelectAlgorithm(algo));
+            Button btn = createBtn(algo, sizeTextField, errorLabel);
             layout.getChildren().add(btn);
         }
 
         stage.setScene(new Scene(layout, 800, 560));
+    }
+
+    private Button createBtn(SortingAlgorithm algo, TextField sizeTextField, Label errorLabel) {
+        Button btn = new Button(algo.getInfo().getName());
+        btn.setPrefWidth(200);
+        btn.setStyle("-fx-font-size: 16px; -fx-padding: 8px;");
+        btn.setOnAction(e -> {
+            try {
+                int size = Integer.parseInt(sizeTextField.getText().trim());
+                if (size < 5 || size > 200) {
+                    errorLabel.setText("Number must be between 5 and 200");
+                }
+                errorLabel.setText("");
+                controller.onSelectAlgorithm(algo, size);
+            } catch (NumberFormatException ex) {
+                errorLabel.setText("Please enter a valid number");
+            }
+        });
+        return btn;
     }
 
     public void showVisualizer(SortingAlgoInfo info) {

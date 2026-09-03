@@ -27,8 +27,8 @@ public class Controller {
         view.showMenu(algorithms);
     }
 
-    public void onSelectAlgorithm(SortingAlgorithm algo) {
-        model.setSortingAlgo(algo);
+    public void onSelectAlgorithm(SortingAlgorithm algo, int size) {
+        model.setSortingAlgo(algo, size);
         view.showVisualizer(algo.getInfo());
         view.render(model.getData());
     }

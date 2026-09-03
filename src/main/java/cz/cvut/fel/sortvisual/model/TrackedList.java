@@ -7,10 +7,11 @@ import lombok.Setter;
 @Setter
 public class TrackedList {
     private Integer[] rawData;
+    // todo steps
 //    private List<SortStep> steps = new ArrayList<>();
 
-    public TrackedList() {
-        rawData = new Integer[100];
+    public TrackedList(int size) {
+        rawData = new Integer[size];
         for (int i = 0; i < rawData.length; i++) {
             rawData[i] = i + 1;
         }
