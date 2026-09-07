@@ -19,6 +19,7 @@ public class Model {
     }
 
     public void sort() {
+        data.getSteps().clear();
         sortingAlgo.sort(data);
     }
 

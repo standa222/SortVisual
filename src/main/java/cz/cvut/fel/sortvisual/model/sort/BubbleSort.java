@@ -8,18 +8,19 @@ public class BubbleSort extends SortingAlgorithm {
     }
 
     public void sort(TrackedList data) {
-        Integer[] array = data.getRawData();
-
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array.length-1; j++) {
-                if (array[j] > array[j+1]) {
-                    Integer tmp = array[j];
-                    array[j] = array[j+1];
-                    array[j+1] = tmp;
+        boolean swapped = true;
+        int i = 1;
+        while (swapped) {
+            swapped = false;
+            for (int j = 0; j < data.getSize()-i; j++) {
+                if (data.isGreaterThan(j, j+1)) {
+                    data.swap(j, j+1);
+                    swapped = true;
                 }
             }
+            data.markSorted(data.getSize()-i);
+            i++;
         }
-
-        data.setRawData(array);
+        data.doneSorted();
     }
 }

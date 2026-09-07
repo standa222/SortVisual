@@ -4,6 +4,7 @@ import cz.cvut.fel.sortvisual.controller.Controller;
 import cz.cvut.fel.sortvisual.model.TrackedList;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgoInfo;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
+import cz.cvut.fel.sortvisual.utils.Colors;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -96,14 +97,21 @@ public class View {
         backBtn.setOnAction(e -> controller.onBackToMenu());
         backBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
-        controls.getChildren().addAll(shuffleBtn, sortBtn, backBtn);
+        Button nextStepBtn = new Button("Next Step");
+        nextStepBtn.setOnAction(e -> controller.onNextStep());
+        nextStepBtn.setAlignment(Pos.BOTTOM_RIGHT);
+
+        Button previousStepBtn = new Button("Previous Step");
+        previousStepBtn.setOnAction(e -> controller.onNextStep());
+        previousStepBtn.setAlignment(Pos.BOTTOM_RIGHT);
+
+        controls.getChildren().addAll(shuffleBtn, sortBtn, backBtn, nextStepBtn, previousStepBtn);
         root.setBottom(controls);
 
         stage.setScene(new Scene(root, 800, 560));
     }
 
-    public void render(TrackedList data) {
-        Integer[] array = data.getRawData();
+    public void render(Integer[] array, boolean[] sortedArray, Integer activeA, Integer activeB, String activeColor) {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         double barWidth = width / array.length;
@@ -117,8 +125,18 @@ public class View {
             double x = i * barWidth;
             double y = height - barHeight;
 
-            gc.setFill(Color.web("#9CCDFF"));
+            if (sortedArray[i]) {
+                gc.setFill(Color.web(Colors.SORTED));
+            } else if (i == activeA || i == activeB) {
+                gc.setFill(Color.web(activeColor));
+            } else {
+                gc.setFill(Color.web(Colors.DEFAULT));
+            }
             gc.fillRect(x, y, barWidth - 1, barHeight);
         }
+    }
+
+    public void render(Integer[] array, boolean[] sortedArray) {
+        render(array, sortedArray, -1, -1, null);
     }
 }
