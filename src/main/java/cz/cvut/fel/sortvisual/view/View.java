@@ -1,7 +1,6 @@
 package cz.cvut.fel.sortvisual.view;
 
 import cz.cvut.fel.sortvisual.controller.Controller;
-import cz.cvut.fel.sortvisual.model.TrackedList;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgoInfo;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
 import cz.cvut.fel.sortvisual.utils.Colors;
@@ -12,9 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -67,6 +64,7 @@ public class View {
                 int size = Integer.parseInt(sizeTextField.getText().trim());
                 if (size < 5 || size > 200) {
                     errorLabel.setText("Number must be between 5 and 200");
+                    return;
                 }
                 errorLabel.setText("");
                 controller.onSelectAlgorithm(algo, size);
@@ -81,34 +79,41 @@ public class View {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #121212;");
 
-        root.setCenter(canvas);
+        HBox topBar = new HBox(12);
+        topBar.setAlignment(Pos.CENTER_LEFT);
+        topBar.setStyle("-fx-padding: 12px 16px; -fx-background-color: #1e1e1e;");
 
-        HBox controls = new HBox(12);
-        controls.setAlignment(Pos.TOP_LEFT);
-        controls.setStyle("-fx-padding: 15px; -fx-background-color: #1e1e1e;");
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setOnAction(e -> controller.onBackToMenu());
 
         Button shuffleBtn = new Button("Shuffle");
         shuffleBtn.setOnAction(e -> controller.onShuffle());
 
-        Button sortBtn = new Button("Start " + info.getName());
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button sortBtn = new Button("Sort ");
         sortBtn.setOnAction(e -> controller.onStartSort());
 
-        Button backBtn = new Button("Back to Menu");
-        backBtn.setOnAction(e -> controller.onBackToMenu());
-        backBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        topBar.getChildren().addAll(shuffleBtn, sortBtn, spacer, backBtn);
+        root.setTop(topBar);
+
+        root.setCenter(canvas);
+
+        HBox bottomControls = new HBox(12);
+        bottomControls.setAlignment(Pos.CENTER);
+        bottomControls.setStyle("-fx-padding: 14px 16px; -fx-background-color: #1e1e1e;");
+
+        Button previousStepBtn = new Button("Previous Step");
+        previousStepBtn.setOnAction(e -> controller.onPreviousStep());
 
         Button nextStepBtn = new Button("Next Step");
         nextStepBtn.setOnAction(e -> controller.onNextStep());
-        nextStepBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
-        Button previousStepBtn = new Button("Previous Step");
-        previousStepBtn.setOnAction(e -> controller.onNextStep());
-        previousStepBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        bottomControls.getChildren().addAll(previousStepBtn, nextStepBtn);
+        root.setBottom(bottomControls);
 
-        controls.getChildren().addAll(shuffleBtn, sortBtn, backBtn, nextStepBtn, previousStepBtn);
-        root.setBottom(controls);
-
-        stage.setScene(new Scene(root, 800, 560));
+        stage.setScene(new Scene(root, 800, 600));
     }
 
     public void render(Integer[] array, boolean[] sortedArray, Integer activeA, Integer activeB, String activeColor) {
