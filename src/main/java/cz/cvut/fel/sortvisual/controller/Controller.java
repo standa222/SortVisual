@@ -26,6 +26,7 @@ public class Controller {
     public void onShuffle() {
         model.shuffle();
         viewArray = model.getData().getRawData().clone();
+        Arrays.fill(viewSortedArray, false);
         view.render(viewArray, viewSortedArray);
     }
 
@@ -45,6 +46,7 @@ public class Controller {
 
     public void onStartSort() {
         stepIndex = 0;
+        finished = false;
         model.sort();
     }
 
@@ -64,6 +66,10 @@ public class Controller {
             }
             stepIndex++;
         }
+    }
+
+    public void onPreviousStep() {
+
     }
 
     private void handleCompare(SortStep step) {
