@@ -9,6 +9,8 @@ import cz.cvut.fel.sortvisual.model.Model;
 import java.util.Arrays;
 import java.util.List;
 
+import static cz.cvut.fel.sortvisual.model.SortStepType.MARK_SORTED;
+
 public class Controller {
     private View view;
     private final Model model;
@@ -55,7 +57,7 @@ public class Controller {
     }
 
     public void onNextStep() {
-        if (!finished) {
+        if (!finished && !model.getData().getSteps().isEmpty()) {
             SortStep current = model.getData().getSteps().get(stepIndex);
 
             switch (current.getType()) {
@@ -69,7 +71,17 @@ public class Controller {
     }
 
     public void onPreviousStep() {
+        if (stepIndex > 0) {
+            stepIndex--;
 
+            SortStep undoStep = model.getData().getSteps().get(stepIndex);
+            switch (undoStep.getType()) {
+                case COMPARE -> handleCompare(undoStep);
+                case SWAP -> handleSwap(undoStep);
+                case MARK_SORTED -> undoMarkSorted(undoStep);
+                case DONE_SORTED -> undoDoneSorted();
+            }
+        }
     }
 
     private void handleCompare(SortStep step) {
@@ -95,4 +107,22 @@ public class Controller {
         finished = true;
     }
 
+    private void undoMarkSorted(SortStep step) {
+        viewSortedArray[step.getIndexA()] = false;
+        view.render(viewArray, viewSortedArray);
+    }
+
+    private void undoDoneSorted() {
+        finished = false;
+        Arrays.fill(viewSortedArray, false);
+
+        // reconstruct viewSortedArray
+        for (SortStep step :  model.getData().getSteps()) {
+            if (step.getType().equals(MARK_SORTED)) {
+                viewSortedArray[step.getIndexA()] = true;
+            }
+        }
+
+        view.render(viewArray, viewSortedArray);
+    }
 }
