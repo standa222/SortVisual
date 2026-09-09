@@ -5,6 +5,10 @@ import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
 import cz.cvut.fel.sortvisual.utils.Colors;
 import cz.cvut.fel.sortvisual.view.View;
 import cz.cvut.fel.sortvisual.model.Model;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +23,10 @@ public class Controller {
     private boolean[] viewSortedArray;
     private int stepIndex = 0;
     private boolean finished = false;
+    private Timeline timeline;
+    private boolean isPlaying = false;
+
+    private static final int FRAME_DURATION_MILLIS = 30;
 
     public Controller(Model model,  List<SortingAlgorithm> algorithms) {
         this.model = model;
@@ -26,6 +34,7 @@ public class Controller {
     }
 
     public void onShuffle() {
+        pause();
         model.shuffle();
         viewArray = model.getData().getRawData().clone();
         Arrays.fill(viewSortedArray, false);
@@ -47,14 +56,17 @@ public class Controller {
     }
 
     public void onStartSort() {
+        pause();
         stepIndex = 0;
         finished = false;
         model.sort();
+        initTimeline();
         view.getControls().showAll();
         view.getControls().disablePreviousStep();
     }
 
     public void onBackToMenu() {
+        pause();
         view.showMenu(algorithms);
         view.getControls().hideAll();
     }
@@ -113,7 +125,7 @@ public class Controller {
         Arrays.fill(viewSortedArray, true);
         view.render(viewArray, viewSortedArray);
         finished = true;
-        view.getControls().disableNextStep();
+        view.getControls().disableNextAndPlay();
     }
 
     private void undoMarkSorted(SortStep step) {
@@ -134,5 +146,37 @@ public class Controller {
 
         view.render(viewArray, viewSortedArray);
         view.getControls().enableNextStep();
+    }
+
+    public void togglePlayPause() {
+        if (isPlaying) {
+            pause();
+        } else {
+            play();
+        }
+    }
+
+    private void pause() {
+        if (isPlaying) {
+            isPlaying = false;
+            timeline.pause();
+            view.getControls().setPlayPauseBtnText("Play");
+        }
+    }
+
+    private void play() {
+        if (!isPlaying && !finished) {
+            isPlaying = true;
+            timeline.play();
+            view.getControls().setPlayPauseBtnText("Pause");
+        }
+    }
+
+    private void initTimeline() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        timeline = new Timeline(new KeyFrame(Duration.millis(FRAME_DURATION_MILLIS), e -> onNextStep()));
+        timeline.setCycleCount(Animation.INDEFINITE);
     }
 }

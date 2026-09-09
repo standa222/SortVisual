@@ -30,6 +30,7 @@ public class View {
         this.stage = stage;
         this.controller = controller;
         controls = new PlaybackControls(controller);
+        controls.hideAll();
     }
 
     public void showMenu(List<SortingAlgorithm> algorithms) {

@@ -6,8 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
 public class PlaybackControls extends HBox {
-//    private final Button playBtn; // todo
-//    private final Button pauseBtn; // todo
+    private final Button playPauseBtn; // todo
     private final Button nextStepBtn;
     private final Button previousStepBtn;
 
@@ -18,23 +17,26 @@ public class PlaybackControls extends HBox {
 
         previousStepBtn = new Button("Previous Step");
         previousStepBtn.setOnAction(e -> controller.onPreviousStep());
-        previousStepBtn.setVisible(false);
 
         nextStepBtn = new Button("Next Step");
         nextStepBtn.setOnAction(e -> controller.onNextStep());
-        nextStepBtn.setVisible(false);
 
-        getChildren().addAll(previousStepBtn, nextStepBtn);
+        playPauseBtn =  new Button("Play");
+        playPauseBtn.setOnAction(e -> controller.togglePlayPause());
+
+        getChildren().addAll(previousStepBtn, playPauseBtn, nextStepBtn);
     }
 
     public void hideAll() {
         previousStepBtn.setVisible(false);
         nextStepBtn.setVisible(false);
+        playPauseBtn.setVisible(false);
     }
 
     public void showAll() {
         previousStepBtn.setVisible(true);
-        nextStepBtn.setVisible(true);
+        nextStepBtn.setVisible(true);;
+        playPauseBtn.setVisible(true);
     }
 
     public void disablePreviousStep() {
@@ -45,11 +47,16 @@ public class PlaybackControls extends HBox {
         previousStepBtn.setDisable(false);
     }
 
-    public void disableNextStep() {
+    public void disableNextAndPlay() {
         nextStepBtn.setDisable(true);
+        playPauseBtn.setDisable(true);
     }
 
     public void enableNextStep() {
         nextStepBtn.setDisable(false);
+    }
+
+    public void setPlayPauseBtnText(String text) {
+        playPauseBtn.setText(text);
     }
 }
