@@ -72,6 +72,11 @@ public class Controller {
     }
 
     public void onNextStep() {
+        pause(); // pause on manual next step button click
+        playNextStep();
+    }
+
+    public void playNextStep() {
         if (!finished && !model.getData().getSteps().isEmpty()) {
             SortStep current = model.getData().getSteps().get(stepIndex);
 
@@ -87,6 +92,7 @@ public class Controller {
     }
 
     public void onPreviousStep() {
+        pause(); // switch to manual on button pressed
         if (stepIndex > 0) {
             stepIndex--;
 
@@ -176,7 +182,7 @@ public class Controller {
         if (timeline != null) {
             timeline.stop();
         }
-        timeline = new Timeline(new KeyFrame(Duration.millis(FRAME_DURATION_MILLIS), e -> onNextStep()));
+        timeline = new Timeline(new KeyFrame(Duration.millis(FRAME_DURATION_MILLIS), e -> playNextStep()));
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 }
