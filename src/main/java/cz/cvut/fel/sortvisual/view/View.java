@@ -14,18 +14,22 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class View {
     private final Stage stage;
     private final Controller controller;
     private final Canvas canvas = new Canvas(800, 500);
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
+    private final PlaybackControls controls;
 
     public View(Stage stage, Controller controller) {
         this.stage = stage;
         this.controller = controller;
+        controls = new PlaybackControls(controller);
     }
 
     public void showMenu(List<SortingAlgorithm> algorithms) {
@@ -99,19 +103,7 @@ public class View {
         root.setTop(topBar);
 
         root.setCenter(canvas);
-
-        HBox bottomControls = new HBox(12);
-        bottomControls.setAlignment(Pos.CENTER);
-        bottomControls.setStyle("-fx-padding: 14px 16px; -fx-background-color: #1e1e1e;");
-
-        Button previousStepBtn = new Button("Previous Step");
-        previousStepBtn.setOnAction(e -> controller.onPreviousStep());
-
-        Button nextStepBtn = new Button("Next Step");
-        nextStepBtn.setOnAction(e -> controller.onNextStep());
-
-        bottomControls.getChildren().addAll(previousStepBtn, nextStepBtn);
-        root.setBottom(bottomControls);
+        root.setBottom(controls);
 
         stage.setScene(new Scene(root, 800, 600));
     }

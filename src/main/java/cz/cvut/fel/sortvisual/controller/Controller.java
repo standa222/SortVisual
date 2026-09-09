@@ -50,10 +50,13 @@ public class Controller {
         stepIndex = 0;
         finished = false;
         model.sort();
+        view.getControls().showAll();
+        view.getControls().disablePreviousStep();
     }
 
     public void onBackToMenu() {
         view.showMenu(algorithms);
+        view.getControls().hideAll();
     }
 
     public void onNextStep() {
@@ -67,6 +70,7 @@ public class Controller {
                 case DONE_SORTED -> handleDoneSorted();
             }
             stepIndex++;
+            view.getControls().enablePreviousStep();
         }
     }
 
@@ -80,6 +84,10 @@ public class Controller {
                 case SWAP -> handleSwap(undoStep);
                 case MARK_SORTED -> undoMarkSorted(undoStep);
                 case DONE_SORTED -> undoDoneSorted();
+            }
+
+            if (stepIndex == 0) {
+                view.getControls().disablePreviousStep();
             }
         }
     }
@@ -105,6 +113,7 @@ public class Controller {
         Arrays.fill(viewSortedArray, true);
         view.render(viewArray, viewSortedArray);
         finished = true;
+        view.getControls().disableNextStep();
     }
 
     private void undoMarkSorted(SortStep step) {
@@ -124,5 +133,6 @@ public class Controller {
         }
 
         view.render(viewArray, viewSortedArray);
+        view.getControls().enableNextStep();
     }
 }
