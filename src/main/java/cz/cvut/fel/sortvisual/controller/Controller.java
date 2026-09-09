@@ -25,8 +25,10 @@ public class Controller {
     private boolean finished = false;
     private Timeline timeline;
     private boolean isPlaying = false;
+    private int playSpeed = 2;
 
-    private static final int FRAME_DURATION_MILLIS = 30;
+    private static final int DEFAULT_FRAME_DURATION_MILLIS = 50;
+    private static final double[] SPEED_RATES = { 0.25, 0.5, 1.0, 2.0, 4.0 };
 
     public Controller(Model model,  List<SortingAlgorithm> algorithms) {
         this.model = model;
@@ -39,6 +41,7 @@ public class Controller {
         viewArray = model.getData().getRawData().clone();
         Arrays.fill(viewSortedArray, false);
         view.render(viewArray, viewSortedArray);
+        view.getControls().hideAll();
     }
 
     // called on init - show menu immediately
@@ -63,6 +66,8 @@ public class Controller {
         initTimeline();
         view.getControls().showAll();
         view.getControls().disablePreviousStep();
+        view.getControls().enableNextAndPlay();
+        play();
     }
 
     public void onBackToMenu() {
@@ -82,6 +87,7 @@ public class Controller {
 
             switch (current.getType()) {
                 case COMPARE -> handleCompare(current);
+                case BEFORE_SWAP -> handleBeforeSwap(current);
                 case SWAP -> handleSwap(current);
                 case MARK_SORTED -> handleMarkSorted(current);
                 case DONE_SORTED -> handleDoneSorted();
@@ -99,7 +105,8 @@ public class Controller {
             SortStep undoStep = model.getData().getSteps().get(stepIndex);
             switch (undoStep.getType()) {
                 case COMPARE -> handleCompare(undoStep);
-                case SWAP -> handleSwap(undoStep);
+                case BEFORE_SWAP -> handleSwap(undoStep);
+                case SWAP -> handleBeforeSwap(undoStep);
                 case MARK_SORTED -> undoMarkSorted(undoStep);
                 case DONE_SORTED -> undoDoneSorted();
             }
@@ -134,6 +141,10 @@ public class Controller {
         view.getControls().disableNextAndPlay();
     }
 
+    private void handleBeforeSwap(SortStep step) {
+        view.render(viewArray, viewSortedArray, step.getIndexA(), step.getIndexB(), Colors.SWAP);
+    }
+
     private void undoMarkSorted(SortStep step) {
         viewSortedArray[step.getIndexA()] = false;
         view.render(viewArray, viewSortedArray);
@@ -151,7 +162,7 @@ public class Controller {
         }
 
         view.render(viewArray, viewSortedArray);
-        view.getControls().enableNextStep();
+        view.getControls().enableNextAndPlay();
     }
 
     public void togglePlayPause() {
@@ -167,6 +178,7 @@ public class Controller {
             isPlaying = false;
             timeline.pause();
             view.getControls().setPlayPauseBtnText("Play");
+            view.getControls().disableFasterAndSlower();
         }
     }
 
@@ -175,6 +187,7 @@ public class Controller {
             isPlaying = true;
             timeline.play();
             view.getControls().setPlayPauseBtnText("Pause");
+            view.getControls().enableFasterAndSlower();
         }
     }
 
@@ -182,7 +195,29 @@ public class Controller {
         if (timeline != null) {
             timeline.stop();
         }
-        timeline = new Timeline(new KeyFrame(Duration.millis(FRAME_DURATION_MILLIS), e -> playNextStep()));
+        timeline = new Timeline(new KeyFrame(Duration.millis(DEFAULT_FRAME_DURATION_MILLIS), e -> playNextStep()));
         timeline.setCycleCount(Animation.INDEFINITE);
+    }
+
+    public void onSlowDown() {
+        if (playSpeed > 0) {
+            playSpeed--;
+            timeline.setRate(SPEED_RATES[playSpeed]);
+            view.getControls().getFasterBtn().setDisable(false);
+        }
+        if (playSpeed == 0) {
+            view.getControls().getSlowerBtn().setDisable(true);
+        }
+    }
+
+    public void onSpeedUp() {
+        if (playSpeed < SPEED_RATES.length - 1) {
+            playSpeed++;
+            timeline.setRate(SPEED_RATES[playSpeed]);
+            view.getControls().getSlowerBtn().setDisable(false);
+        }
+        if (playSpeed == SPEED_RATES.length - 1) {
+            view.getControls().getFasterBtn().setDisable(true);
+        }
     }
 }

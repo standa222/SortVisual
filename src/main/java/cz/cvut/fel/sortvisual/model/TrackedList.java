@@ -35,6 +35,7 @@ public class TrackedList {
     }
 
     public void swap(int indexA, int indexB) {
+        steps.add(new SortStep(BEFORE_SWAP, indexA, indexB));
         steps.add(new SortStep(SWAP, indexA, indexB));
         int temp = rawData[indexA];
         rawData[indexA] = rawData[indexB];
