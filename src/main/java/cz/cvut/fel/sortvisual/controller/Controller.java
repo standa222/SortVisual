@@ -91,6 +91,7 @@ public class Controller {
                 case SWAP -> handleSwap(current);
                 case MARK_SORTED -> handleMarkSorted(current);
                 case DONE_SORTED -> handleDoneSorted();
+                case OVERWRITE -> handleOverwrite(current);
             }
             stepIndex++;
             view.getControls().enablePreviousStep();
@@ -109,6 +110,7 @@ public class Controller {
                 case SWAP -> handleBeforeSwap(undoStep);
                 case MARK_SORTED -> undoMarkSorted(undoStep);
                 case DONE_SORTED -> undoDoneSorted();
+                case OVERWRITE -> undoOverwrite(undoStep);
             }
 
             if (stepIndex == 0) {
@@ -219,5 +221,15 @@ public class Controller {
         if (playSpeed == SPEED_RATES.length - 1) {
             view.getControls().getFasterBtn().setDisable(true);
         }
+    }
+
+    private void handleOverwrite(SortStep step) {
+        viewArray[step.getIndexA()] = step.getValue();
+        view.render(viewArray, viewSortedArray, step.getIndexA(), -1, Colors.SWAP);
+    }
+
+    private void undoOverwrite(SortStep step) {
+        viewArray[step.getIndexA()] = step.getPreviousValue();
+        view.render(viewArray, viewSortedArray, step.getIndexA(), -1, Colors.SWAP);
     }
 }

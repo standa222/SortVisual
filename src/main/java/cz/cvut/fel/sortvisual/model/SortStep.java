@@ -9,18 +9,26 @@ public class SortStep {
     private SortStepType type;
     private int indexA = -1;
     private int indexB = -1;
+    private final int value;
+    private final int previousValue;
+
+    public SortStep(SortStepType type, int indexA, int indexB) {
+        this(type, indexA, indexB, -1, -1);
+    }
 
     public SortStep(SortStepType type, int indexA) {
-        this.type = type;
-        this.indexA = indexA;
+        this(type, indexA, -1, -1, -1);
     }
 
     public SortStep(SortStepType type) {
-        this.type = type;
+        this(type, -1, -1, -1, -1);
     }
 
-    @Override
-    public String toString() {
-        return type + "(" + indexA + ", " + indexB + ")";
+    public SortStep(SortStepType type, int index, int value, int previousValue) {
+        this.type = type;
+        this.indexA = index;
+        this.indexB = -1;
+        this.value = value;
+        this.previousValue = previousValue;
     }
 }

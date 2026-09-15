@@ -6,4 +6,5 @@ public enum SortStepType {
     SWAP,
     MARK_SORTED,
     DONE_SORTED,
+    OVERWRITE,
 }

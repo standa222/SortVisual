@@ -61,4 +61,14 @@ public class TrackedList {
             initial--;
         }
     }
+
+    public int get(int index) {
+        return rawData[index];
+    }
+
+    public void set(int index, int value) {
+        int prev = rawData[index];
+        rawData[index] = value;
+        steps.add(new SortStep(OVERWRITE, index, value, prev));
+    }
 }

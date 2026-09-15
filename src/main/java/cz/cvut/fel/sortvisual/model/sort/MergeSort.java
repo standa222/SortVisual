@@ -13,33 +13,42 @@ public class MergeSort extends SortingAlgorithm {
         data.doneSorted();
     }
 
-    public void mergeSort(TrackedList data, int lo, int hi) {
-        if (hi-lo < 1) {
+    private void mergeSort(TrackedList data, int lo, int hi) {
+        if (lo >= hi) {
             return;
         }
 
-        int half = lo + (hi-lo) / 2;
-        mergeSort(data, lo, half);
-        mergeSort(data, half+1, hi);
+        int mid = lo + (hi - lo) / 2;
+        mergeSort(data, lo, mid);
+        mergeSort(data, mid + 1, hi);
 
-        merge(data, lo, half, half+1, hi);
+        merge(data, lo, mid, hi);
     }
 
-    private void merge(TrackedList data, int leftLo, int leftHi, int rightLo, int rightHi) {
-        int left = leftLo; // left index
-        int right = rightLo; // right index
-        int current = leftLo;
+    private void merge(TrackedList data, int lo, int mid, int hi) {
+        int[] temp = new int[hi - lo + 1];
+        int i = lo;
+        int j = mid + 1;
+        int k = 0;
 
-        while (left <= leftHi && right <= rightHi) {
-            if (data.isLowerOrEqualTo(left, right)) {
-                data.insert(left, current);
+        while (i <= mid && j <= hi) {
+            if (data.isLowerOrEqualTo(i, j)) {
+                temp[k++] = data.get(i++);
             } else {
-                data.insert(right, current);
-                right++;
-                leftHi++;
+                temp[k++] = data.get(j++);
             }
-            left++;
-            current++;
+        }
+
+        while (i <= mid) {
+            temp[k++] = data.get(i++);
+        }
+
+        while (j <= hi) {
+            temp[k++] = data.get(j++);
+        }
+
+        for (int m = 0; m < temp.length; m++) {
+            data.set(lo + m, temp[m]);
         }
     }
 }
