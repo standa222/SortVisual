@@ -1,9 +1,6 @@
 package cz.cvut.fel.sortvisual.utils;
 
-import cz.cvut.fel.sortvisual.model.sort.BubbleSort;
-import cz.cvut.fel.sortvisual.model.sort.SelectionSort;
-import cz.cvut.fel.sortvisual.model.sort.SortingAlgoInfo;
-import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
+import cz.cvut.fel.sortvisual.model.sort.*;
 
 import java.util.List;
 
@@ -23,13 +20,25 @@ public class AlgorithmFactory {
                 new SelectionSort(new SortingAlgoInfo(
                         "Selection Sort",
                         "O(n^2)",
-                        true,
+                        false,
                         "O(n^2)",
                         "",
                         "O(n^2)",
                         "",
                         "O(1)"
+                )),
+                new InsertionSort(new SortingAlgoInfo(
+                        "Insertion Sort",
+                        "O(n^2)",
+                        true,
+                        "O(n^2)",
+                        "",
+                        "O(n)",
+                        "",
+                        "O(1)"
                 ))
+                // TODO - graph comparison for every algorithm with growing n, compared to n^2, n*log n etc.
+
         );
     }
 }
