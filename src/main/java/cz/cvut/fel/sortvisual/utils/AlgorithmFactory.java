@@ -36,8 +36,38 @@ public class AlgorithmFactory {
                         "O(n)",
                         "",
                         "O(1)"
-                ))
+                )),
                 // TODO - graph comparison for every algorithm with growing n, compared to n^2, n*log n etc.
+                new HeapSort(new SortingAlgoInfo(
+                        "Heap Sort",
+                        "O(n*log(n))",
+                        false,
+                        "O(n*log(n))",
+                        "",
+                        "O(n)",
+                        "",
+                        "O(1)"
+                )),
+                new QuickSort(new SortingAlgoInfo(
+                        "Quick Sort",
+                        "O(n*log(n))",
+                        false,
+                        "O(n^2)",
+                        "",
+                        "O(n*log(n))",
+                        "",
+                        "O(log(n))"
+                )),
+                new MergeSort(new SortingAlgoInfo(
+                        "Merge Sort",
+                        "O(n*log(n))",
+                        true,
+                        "O(n*log(n))",
+                        "",
+                        "O(n*log(n))",
+                        "",
+                        "O(n)"
+                ))
 
         );
     }

@@ -34,6 +34,11 @@ public class TrackedList {
         return rawData[indexA] < rawData[indexB];
     }
 
+    public boolean isLowerOrEqualTo(int indexA, int indexB) {
+        steps.add(new SortStep(COMPARE, indexA, indexB));
+        return rawData[indexA] <= rawData[indexB];
+    }
+
     public void swap(int indexA, int indexB) {
         steps.add(new SortStep(BEFORE_SWAP, indexA, indexB));
         steps.add(new SortStep(SWAP, indexA, indexB));
@@ -48,5 +53,12 @@ public class TrackedList {
 
     public void doneSorted() {
         steps.add(new SortStep(DONE_SORTED));
+    }
+
+    public void insert(int initial, int target) {
+        while (initial > target) {
+            swap(initial, initial-1);
+            initial--;
+        }
     }
 }
