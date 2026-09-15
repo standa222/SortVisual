@@ -18,7 +18,7 @@ public class AlgorithmInfoPane extends VBox {
         setStyle("-fx-background-color: #121212; -fx-border-color: #333333; -fx-border-width: 0 0 0 1;");
 
         Label title = new Label(info.getName());
-        title.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 18px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 24px; -fx-font-weight: bold;");
 
         Label timeComplexityHeader = createSectionHeader("Time Complexity");
         Label averageCase = createDataRow("Average:", info.getAvgTimeComplexity());
@@ -46,13 +46,13 @@ public class AlgorithmInfoPane extends VBox {
 
     private Label createSectionHeader(String text) {
         Label header = new Label(text);
-        header.setStyle("-fx-text-fill: #3498db; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 0 0 0;");
+        header.setStyle("-fx-text-fill: #3498db; -fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 8 0 0 0;");
         return header;
     }
 
     private Label createDataRow(String label, String value) {
         Label row = new Label(label + "  " + (value != null ? value : "-"));
-        row.setStyle("-fx-text-fill: #ecf0f1; -fx-font-size: 13px;");
+        row.setStyle("-fx-text-fill: #ecf0f1; -fx-font-size: 18px;");
         return row;
     }
 
@@ -61,12 +61,12 @@ public class AlgorithmInfoPane extends VBox {
         row.setAlignment(Pos.CENTER_LEFT);
 
         Label text = new Label(label + "  " + (value != null ? value : "-"));
-        text.setStyle("-fx-text-fill: #ecf0f1; -fx-font-size: 13px;");
+        text.setStyle("-fx-text-fill: #ecf0f1; -fx-font-size: 20px;");
         row.getChildren().add(text);
 
         if (note != null && !note.isBlank()) {
             Label infoIcon = new Label("ⓘ");
-            infoIcon.setStyle("-fx-text-fill: #f39c12; -fx-font-size: 13px; -fx-cursor: hand;");
+            infoIcon.setStyle("-fx-text-fill: #f39c12; -fx-font-size: 18px; -fx-cursor: hand;");
 
             Tooltip tooltip = new Tooltip(note);
             tooltip.setShowDelay(Duration.millis(150));
