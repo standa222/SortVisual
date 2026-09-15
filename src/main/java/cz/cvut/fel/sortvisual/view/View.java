@@ -57,7 +57,7 @@ public class View {
             layout.getChildren().add(btn);
         }
 
-        stage.setScene(new Scene(layout, 800, 560));
+        stage.setScene(new Scene(layout, 1040, 600));
     }
 
     private Button createBtn(SortingAlgorithm algo, TextField sizeTextField, Label errorLabel) {
@@ -105,8 +105,9 @@ public class View {
 
         root.setCenter(canvas);
         root.setBottom(controls);
+        root.setRight(new AlgorithmInfoPane(info));
 
-        stage.setScene(new Scene(root, 800, 600));
+        stage.setScene(new Scene(root, 1040, 600));
     }
 
     public void render(Integer[] array, boolean[] sortedArray, Integer activeA, Integer activeB, String activeColor) {

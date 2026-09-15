@@ -12,21 +12,23 @@ public class AlgorithmFactory {
         return List.of(
                 new BubbleSort(new SortingAlgoInfo(
                         "Bubble Sort",
-                        "n^2",
+                        "O(n^2)",
                         true,
-                        "n^2",
+                        "O(n^2)",
                         "reverse sorted data",
-                        "n",
-                        "already sorted"
+                        "O(n)",
+                        "already sorted",
+                        "O(1)"
                 )),
                 new SelectionSort(new SortingAlgoInfo(
                         "Selection Sort",
-                        "n^2",
+                        "O(n^2)",
                         true,
-                        "n^2",
+                        "O(n^2)",
                         "",
-                        "n^2",
-                        ""
+                        "O(n^2)",
+                        "",
+                        "O(1)"
                 ))
         );
     }
