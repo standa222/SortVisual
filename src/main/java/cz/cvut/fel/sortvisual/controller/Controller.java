@@ -1,6 +1,7 @@
 package cz.cvut.fel.sortvisual.controller;
 
 import cz.cvut.fel.sortvisual.model.SortStep;
+import cz.cvut.fel.sortvisual.model.TimeComplexityData;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
 import cz.cvut.fel.sortvisual.utils.Colors;
 import cz.cvut.fel.sortvisual.view.View;
@@ -231,5 +232,18 @@ public class Controller {
     private void undoOverwrite(SortStep step) {
         viewArray[step.getIndexA()] = step.getPreviousValue();
         view.render(viewArray, viewSortedArray, step.getIndexA(), -1, Colors.SWAP);
+    }
+
+    public void onCheckTimeComplexity() {
+        TimeComplexityData timeData = model.computeTimeComplexityData();
+        view.showTimeComplexity(timeData);
+        // todo view.showTimeComplexity
+        // todo model.computeTimeComplexity
+    }
+
+    public void onBackToVisualizer() {
+        view.showVisualizer(model.getSortingAlgo().getInfo());
+        onPreviousStep();
+        onNextStep();
     }
 }

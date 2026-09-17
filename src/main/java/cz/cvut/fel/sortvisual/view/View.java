@@ -1,6 +1,7 @@
 package cz.cvut.fel.sortvisual.view;
 
 import cz.cvut.fel.sortvisual.controller.Controller;
+import cz.cvut.fel.sortvisual.model.TimeComplexityData;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgoInfo;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgorithm;
 import cz.cvut.fel.sortvisual.utils.Colors;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Getter
 public class View {
@@ -105,7 +107,7 @@ public class View {
 
         root.setCenter(canvas);
         root.setBottom(controls);
-        root.setRight(new AlgorithmInfoPane(info));
+        root.setRight(new AlgorithmInfoPane(info, controller));
 
         stage.setScene(new Scene(root, 1040, 600));
     }
@@ -137,5 +139,68 @@ public class View {
 
     public void render(Integer[] array, boolean[] sortedArray) {
         render(array, sortedArray, -1, -1, null);
+    }
+
+    public void showTimeComplexity(TimeComplexityData data) {
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: #121212;");
+
+        HBox topBar = new HBox(12);
+        topBar.setAlignment(Pos.CENTER_LEFT);
+        topBar.setStyle("-fx-padding: 12px 16px; -fx-background-color: #1e1e1e;");
+
+        Button backBtn = new Button("Back to visualizer");
+        backBtn.setOnAction(e -> controller.onBackToVisualizer());
+
+        Canvas chartCanvas = new Canvas(500, 500);
+        GraphicsContext chartGc = chartCanvas.getGraphicsContext2D();
+        drawComplexityData(chartGc, data);
+
+        root.setCenter(chartCanvas);
+
+        topBar.getChildren().add(backBtn);
+        root.setTop(topBar);
+        stage.setScene(new Scene(root, 1040, 600));
+    }
+
+    private void drawComplexityData(GraphicsContext chartGc, TimeComplexityData data) {
+        double width = chartGc.getCanvas().getWidth();
+        double height = chartGc.getCanvas().getHeight();
+        int padding = 25;
+
+        chartGc.setFill(Color.web("#121212"));
+        chartGc.fillRect(0, 0, width, height);
+
+        // Draw axes
+        chartGc.setStroke(Color.web("#ffffff"));
+        chartGc.strokeLine(padding, height - padding, width - padding, height - padding); // X-axis
+        chartGc.strokeLine(padding, padding, padding, height - padding); // Y-axis
+
+        // Draw labels
+        chartGc.setFill(Color.web("#ffffff"));
+        chartGc.fillText("Input Size (n)", width / 2, height - 10);
+        chartGc.fillText("Number of operations", 10, 10);
+
+        // Draw complexity curves
+        chartGc.setLineWidth(3);
+        chartGc.setStroke(Color.web("#EB27F5"));
+        chartGc.strokeLine(padding, height - padding, width - padding, padding);
+
+        chartGc.setStroke(Color.web("#13cf42"));
+        drawFunctionCurve(chartGc, width, height, padding, (n) -> n * Math.log(n)); // O(n log n)
+        chartGc.setStroke(Color.web("#ff2929"));
+        drawFunctionCurve(chartGc, width, height, padding, (n) -> (double) (n * n)); // O(n^2)
+    }
+
+    private void drawFunctionCurve(GraphicsContext chartGc, double width, double height, int padding, Function<Integer, Double> function) {
+        for (int x = 0; x < width - 2 * padding; x++) {
+            double y = function.apply(x);
+            double xCord = x + padding;
+            double yCord = height - padding - y;
+
+            System.out.println("point: x=" + x + ", y=" + y + ", xCord=" + xCord + ", yCord=" + yCord);
+
+            chartGc.strokeLine(xCord, yCord, padding + x + 1, yCord);
+        }
     }
 }

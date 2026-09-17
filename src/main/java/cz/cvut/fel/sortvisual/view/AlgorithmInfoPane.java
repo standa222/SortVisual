@@ -1,8 +1,10 @@
 package cz.cvut.fel.sortvisual.view;
 
+import cz.cvut.fel.sortvisual.controller.Controller;
 import cz.cvut.fel.sortvisual.model.sort.SortingAlgoInfo;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
@@ -11,7 +13,7 @@ import javafx.util.Duration;
 
 public class AlgorithmInfoPane extends VBox {
 
-    public AlgorithmInfoPane(SortingAlgoInfo info) {
+    public AlgorithmInfoPane(SortingAlgoInfo info, Controller controller) {
         setSpacing(10);
         setPadding(new Insets(16));
         setPrefWidth(240);
@@ -31,6 +33,9 @@ public class AlgorithmInfoPane extends VBox {
         Label spaceComplexityHeader = createSectionHeader("Space Complexity");
         Label spaceComplexity = createDataRow("Memory:", info.getSpaceComplexity());
 
+        Button timeComplexityBtn = new Button("Check time complexity");
+        timeComplexityBtn.setOnAction(e -> controller.onCheckTimeComplexity());
+
         getChildren().addAll(
                 title,
                 timeComplexityHeader,
@@ -40,7 +45,8 @@ public class AlgorithmInfoPane extends VBox {
                 stabilityHeader,
                 stability,
                 spaceComplexityHeader,
-                spaceComplexity
+                spaceComplexity,
+                timeComplexityBtn
         );
     }
 
